@@ -1,0 +1,54 @@
+
+# Created at:  https://app.quickdatabasediagrams.com/#/
+# Store Department information
+Departments
+-
+dept_no PK VARCHAR
+dept_name VARCHAR 
+
+# Basic Employee Information
+Employees
+-
+emp_no PK int 
+first_name VARCHAR 
+last_name VARCHAR
+gender VARCHAR
+birthdate date
+hiredate date
+
+# Deparments that the employees work in
+Dept_emp
+---
+index PK int
+emp_no int FK >- Employees.emp_no 
+dept_no VARCHAR FK >- Departments.dept_no
+from_date date
+to_date date
+
+# Managers for the departments
+Dept_managers
+-
+index PK int
+emp_no int FK >- Employees.emp_no
+dept_no VARCHAR FK >- Departments.dept_no
+from_date date
+to_date date
+
+# Salary information for the eployees
+Salaries
+-
+index PK int
+emp_no int FK >- Employees.emp_no
+Amount int
+from_date date
+to_date date
+
+
+#  Job Title information about the employees
+Titles
+-
+index PK int
+emp_no int FK >- Employees.emp_no
+title VARCHAR 
+from_date date
+to_date date
