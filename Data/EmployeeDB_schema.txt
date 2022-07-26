@@ -14,7 +14,7 @@ first_name VARCHAR
 last_name VARCHAR
 gender VARCHAR
 birthdate date
-hiredate date
+hire_date date
 
 # Deparments that the employees work in
 Dept_emp
