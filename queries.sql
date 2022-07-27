@@ -34,3 +34,9 @@ INNER JOIN employees AS emp ON emp.emp_no = dm.emp_no
 INNER JOIN departments AS dept ON dept.dept_no = dm.dept_no
 WHERE dm.to_date='9999-01-01';
 
+-- current retiring employees info + salaries
+SELECT ce.*, sal.salary
+FROM current_emp AS ce
+LEFT JOIN salaries AS sal ON sal.emp_no = ce.emp_no
+ORDER BY ce.emp_no;
+
