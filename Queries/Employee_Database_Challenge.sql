@@ -25,4 +25,16 @@ GROUP BY title
 ORDER BY COUNT(emp_no) DESC;
 
 
+-- current employees that are eligable for the mentorship program are born in 1965
+SELECT DISTINCT ON (e.emp_no) e.emp_no, 
+    e.first_name, e.last_name, e.birthdate, 
+    de.from_date, de.to_date, titles.title
+INTO mentorship_eligibility
+FROM dept_emp AS de 
+INNER JOIN employees as e ON e.emp_no = de.emp_no
+INNER JOIN titles ON e.emp_no = titles.emp_no
+WHERE (e.birthdate BETWEEN '1965-01-01' AND '1965-12-31')
+AND (de.to_date = '9999-01-01')
+ORDER BY e.emp_no, titles.to_date DESC;
+
 
