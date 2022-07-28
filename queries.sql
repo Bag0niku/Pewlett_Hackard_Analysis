@@ -34,20 +34,28 @@ INNER JOIN employees AS emp ON emp.emp_no = dm.emp_no
 INNER JOIN departments AS dept ON dept.dept_no = dm.dept_no
 WHERE dm.to_date='9999-01-01';
 
--- current employees info + salaries
+-- retiries info + salaries
 SELECT ri.*, sal.salary
 FROM  retirement_info AS ri
 LEFT JOIN salaries AS sal ON sal.emp_no = ri.emp_no
 ORDER BY ri.emp_no;
 
--- current retiring employees just in Sales Department 
+-- retiring employees just in Sales Department 
 SELECT emp_no, first_name, last_name, dept_name
 FROM retirement_info
 WHERE (dept_name= 'Sales')
 ORDER BY dept_name;
 
 -- Mentorship Program for retiring Sales and Development Departments only
-SELECT emp_no, first_name, last_name, dept_name
-FROM retirement_info
-WHERE ((dept_name= 'Sales') OR (dept_name= 'Development'))
-ORDER BY dept_name;
+SELECT DISTINCT (ri.emp_no), ri.first_name, ri.last_name, ri.dept_name, titles.title, titles.to_date
+INTO mentor_prog
+FROM retirement_info AS ri
+INNER JOIN titles ON titles.emp_no = ri.emp_no
+WHERE ((ri.dept_name= 'Sales') OR (ri.dept_name= 'Development'))
+ORDER BY titles.to_date DESC, ri.emp_no;
+
+-- count of positions eligable for the mentorship program occupied by retiries
+SELECT COUNT (emp_no), title
+FROM mentor_prog
+GROUP BY title
+ORDER BY title;
