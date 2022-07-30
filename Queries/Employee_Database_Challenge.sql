@@ -38,3 +38,36 @@ AND (de.to_date = '9999-01-01')
 ORDER BY e.emp_no, titles.to_date DESC;
 
 
+-- Breakdown of job titles and departments of mentorship eligiable employees.
+SELECT count(me.emp_no) AS mentorship,
+    me.title AS mentor_title,	d.dept_name as mentor_dept
+INTO mentor_titles
+FROM dept_emp as de
+INNER JOIN mentorship_eligibility AS me on de.emp_no = me.emp_no
+INNER JOIN departments AS d ON de.dept_no = d.dept_no
+GROUP BY mentor_title, d.dept_name
+ORDER BY d.dept_name, mentor_title;
+
+
+-- counting retiring job titles by department
+SELECT COUNT(emp_no) AS retiring, 
+    title AS rt_title, 
+	dept_name AS rt_dept
+INTO retiring_titles
+FROM retirement_titles
+GROUP BY rt_title, rt_dept 
+ORDER BY rt_dept, rt_title;
+
+-- comparing eligible mentors to retires
+Select rt.retiring, mt.mentorship, mt.mentor_title, rt.rt_dept
+INTO mentor_prog
+from mentor_titles as mt
+Left join retiring_titles as rt on rt.rt_dept=mt.mentor_dept
+where ((mt.mentor_title, mt.mentor_dept) = (rt.rt_title, rt.rt_dept))
+ORDER BY rt.rt_dept;
+
+
+-- retiring Positions with no mentors eligible 
+Select *
+from retiring_titles
+where (rt_title, rt_dept) not in (select mentor_title, mentor_dept from mentor_titles);
