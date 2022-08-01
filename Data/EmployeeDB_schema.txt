@@ -1,5 +1,7 @@
 
-# Created at:  https://app.quickdatabasediagrams.com/#/
+# Created in the early planning phase of the database schema
+
+
 # Store Department information
 Departments
 -
