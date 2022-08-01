@@ -55,6 +55,42 @@ INNER JOIN departments AS d ON de.dept_no = d.dept_no
 GROUP BY mentor_title, d.dept_name
 ORDER BY d.dept_name, mentor_title;
 
+-- who is expected to retire in the next wave, 5 years from now.
+SELECT distinct on (e.emp_no) e.emp_no, e.first_name, e.last_name, 
+        titles.title, d.dept_name
+INTO retirement_next_5
+FROM current_emp AS e
+INNER JOIN departments as d ON e.dept_no = d.dept_no
+INNER JOIN titles ON e.emp_no = titles.emp_no
+WHERE (e.birthdate BETWEEN '1956-01-01' AND '1960-12-31')
+ORDER BY e.emp_no, titles.to_date DESC;
+
+-- Who is expected to retire in the another wave, 10 years from now.
+SELECT distinct on (e.emp_no) e.emp_no, e.first_name, e.last_name, 
+        titles.title, d.dept_name 
+INTO retirement_next_10
+FROM current_emp as e
+INNER JOIN departments AS d ON e.dept_no = d.dept_no
+INNER JOIN titles ON e.emp_no = titles.emp_no
+WHERE (e.birthdate BETWEEN '1961-01-01' AND '1965-12-31')
+ORDER BY e.emp_no, titles.to_date DESC;
+
+-- count of the next wave of retiries, 5 years from now.
+SELECT COUNT (emp_no) AS n5,
+	title, dept_name
+INTO rt_next_5
+FROM retirement_next_5
+GROUP BY title, dept_name
+ORDER BY dept_name, n5 DESC;
+
+-- count of the wave of retiries, 10 years from now.
+SELECT COUNT (emp_no) AS n10,
+	title, dept_name
+INTO rt_next_10
+FROM retirement_next_10
+GROUP BY title, dept_name
+ORDER BY dept_name;
+
 
 -- ========================================
 
@@ -87,47 +123,11 @@ from retiring_titles
 where (rt_title, rt_dept) not in (select mentor_title, mentor_dept from mentor_titles);
 
 
--- who is expected to retire in the next wave, 5 years from now.
-SELECT distinct on (e.emp_no) e.emp_no, e.first_name, e.last_name, titles.title, d.dept_name 
-INTO retirement_next_5
-FROM dept_emp as de
-INNER JOIN employees AS e ON e.emp_no = de.emp_no
-INNER JOIN titles ON e.emp_no = titles.emp_no
-INNER JOIN departments AS d ON d.dept_no = de.dept_no
-WHERE (e.birthdate BETWEEN '1956-01-01' AND '1960-12-31')
-AND (de.to_date= '9999-01-01')
-ORDER BY e.emp_no, titles.to_date DESC;
-
-
--- Who is expected to retire in the another wave, 10 years from now.
-SELECT distinct on (e.emp_no) e.emp_no, e.first_name, e.last_name, titles.title, d.dept_name 
-INTO retirement_next_10
-FROM dept_emp as de
-INNER JOIN employees AS e ON e.emp_no = de.emp_no
-INNER JOIN titles ON e.emp_no = titles.emp_no
-INNER JOIN departments AS d ON d.dept_no = de.dept_no
-WHERE (e.birthdate BETWEEN '1961-01-01' AND '1965-12-31')
-AND (de.to_date= '9999-01-01')
-ORDER BY e.emp_no, titles.to_date DESC;
-
 
 Select * from retirement_next_10;
 
--- count of the next wave of retiries, 5 years from now.
-select count(emp_no) as n5,
-	title, dept_name
-into rt_next_5
-from retirement_next_5
-GROUP BY title, dept_name
-ORDER BY dept_name;
 
--- count of the wave of retiries, 10 years from now.
-select count(emp_no) as n10,
-	title, dept_name
-into rt_next_10
-from retirement_next_10
-GROUP BY title, dept_name
-ORDER BY dept_name;
+
 
 
 -- count of vacant positions from retiring emplyees, 5 year intervals
