@@ -45,6 +45,13 @@ INNER JOIN titles ON e.emp_no = titles.emp_no
 WHERE (e.birthdate BETWEEN '1965-01-01' AND '1965-12-31')
 ORDER BY e.emp_no, titles.to_date DESC;
 
+-- Mentorship Program for retiring Sales and Development Departments only
+SELECT DISTINCT (ri.emp_no), ri.first_name, ri.last_name, ri.dept_name, titles.title, titles.to_date
+FROM retirement_info AS ri
+INNER JOIN titles ON titles.emp_no = ri.emp_no
+WHERE ((ri.dept_name= 'Sales') OR (ri.dept_name= 'Development'))
+ORDER BY titles.to_date DESC, ri.emp_no;
+
 -- Breakdown of job titles and departments of mentorship eligiable employees.
 SELECT count(me.emp_no) AS mentorship,
     me.title AS mentor_title,	d.dept_name as mentor_dept
@@ -91,38 +98,26 @@ FROM retirement_next_10
 GROUP BY title, dept_name
 ORDER BY dept_name;
 
+-- count of vacant positions from retiring emplyees, 5 year intervals
+ -- r5 has the most positions of the 3 waves
+SELECT DISTINCT ON (r5.title, r5.dept_name)
+    ci.retiring AS now, r5.n5, r10.n10, r5.title, ci.dept_name
+FROM  rt_next_5 AS r5
+FULL JOIN company_impact as ci on (ci.title, ci.dept_name)= (r5.title, r5.dept_name)
+FULL JOIN rt_next_10 as r10 on (r5.title, r5.dept_name)= (r10.title, r10.dept_name)
+ORDER BY r5.dept_name;
 
--- ========================================
-
-
--- Mentorship Program for retiring Sales and Development Departments only
-SELECT DISTINCT (ri.emp_no), ri.first_name, ri.last_name, ri.dept_name, titles.title, titles.to_date
-INTO mentor_prog
-FROM retirement_info AS ri
-INNER JOIN titles ON titles.emp_no = ri.emp_no
-WHERE ((ri.dept_name= 'Sales') OR (ri.dept_name= 'Development'))
-ORDER BY titles.to_date DESC, ri.emp_no;
-
--- count of positions eligable for the mentorship program occupied by retiries
-SELECT COUNT (emp_no), title
-FROM mentor_prog
-GROUP BY title
-ORDER BY title;
-
--- comparing eligible mentors to retires
-Select distinct on (rt.title, rt.dept_name) rt.retiring, 
-    mt.mentorship, mt.mentor_title, rt.dept_name
-INTO mentor_program
-from mentor_titles as mt
-full join company_impact as rt on (mt.mentor_title, mt.mentor_dept) = (rt.title, rt.dept_name)
-ORDER BY rt.dept_name;
-
--- retiring Positions with no mentors eligible 
-Select *
-from retiring_titles
-where (rt_title, rt_dept) not in (select mentor_title, mentor_dept from mentor_titles);
-
-
+-- Reccommended solution for the Mentor Program, change the eligability to the 
+-- top performing 20% of wave 2 (n5) and wave 3 (n10).
+Select distinct on (r5.title, r5.dept_name)
+	(r5.n5+ci.retiring) as retiring,  -- wave #1 and #2
+	r5.n5*0.2 as "20% N5",
+	r10.n10*0.2 as "20% N10",
+	r5.title, r5.dept_name
+from  rt_next_5 as r5
+full join company_impact as ci on (ci.title, ci.dept_name)= (r5.title, r5.dept_name)
+full join rt_next_10 as r10 on (r5.title, r5.dept_name)= (r10.title, r10.dept_name)
+ORDER BY r5.dept_name;
 
 -- checking for positions not having new vacancies every wave
 Select *
@@ -140,8 +135,5 @@ from company_impact
 where ((title, dept_name) not in (select title, dept_name from rt_next_5))
 or ((title, dept_name) not in (select title, dept_name from rt_next_10));
 
--- Not enough mentors are eligable for the mentorship program, what if the pool of potentail eligible candidates was expanded?
-select mp.retiring, r10.n10, mp.mentorship, mp.mentor_title, mp.dept_name 
-from mentor_program as mp
-full join rt_next_10 as r10 on (mp.mentor_title, mp.dept_name) = (r10.title, r10.dept_name);
+
 
