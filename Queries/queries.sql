@@ -12,7 +12,7 @@ WHERE (de.to_date = '9999-01-01')
 ORDER BY emp.emp_no;
 
 -- Potential retiries with the company
-SELECT ce.emp_no, ce.first_name, ce.last_name, ce.birthdate, ce.gender, ce.hire_date, de.dept_no, dept.dept_name 
+SELECT ce.*, de.dept_no, dept.dept_name 
 INTO retirement_info
 FROM dept_emp as de
 INNER JOIN current_emp as ce ON ce.emp_no = de.emp_no
@@ -20,7 +20,7 @@ INNER JOIN departments as dept ON de.dept_no = dept.dept_no
 WHERE (ce.birthdate BETWEEN '1952-01-01' AND '1955-12-31');
 
 -- Potential retiries that are eligible for the benefits package
-SELECT ce.emp_no, ce.first_name, ce.last_name, ce.birthdate, ce.gender, ce.hire_date, de.dept_no, dept.dept_name 
+SELECT ce.*, de.dept_no, dept.dept_name 
 INTO retirement_benefits
 FROM dept_emp as de
 INNER JOIN current_emp as ce ON ce.emp_no = de.emp_no
