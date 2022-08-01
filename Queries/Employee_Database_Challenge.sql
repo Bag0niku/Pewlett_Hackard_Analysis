@@ -124,20 +124,6 @@ where (rt_title, rt_dept) not in (select mentor_title, mentor_dept from mentor_t
 
 
 
-Select * from retirement_next_10;
-
-
-
-
-
--- count of vacant positions from retiring emplyees, 5 year intervals
-Select distinct on (r5.title, ci.dept_name) 
-    ci.retiring as now, r5.n5, r10.n10, r5.title, ci.dept_name
-from company_impact as rt
-full join rt_next_5 as r5 on (ci.title, ci.dept_name)= (r5.title, r5.dept_name)
-full join rt_next_10 as r10 on (ci.title, ci.dept_name)= (r10.title, r10.dept_name)
-ORDER BY ci.dept_name;
-
 -- checking for positions not having new vacancies every wave
 Select *
 from rt_next_5

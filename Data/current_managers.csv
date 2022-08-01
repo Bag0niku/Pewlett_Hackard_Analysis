@@ -1,0 +1,10 @@
+emp_no,first_name,last_name,dept_no,dept_name,hire_date,to_date
+110039,Vishwani,Minakawa,d001,Marketing,1986-04-12,9999-01-01
+110114,Isamu,Legleitner,d002,Finance,1985-01-14,9999-01-01
+110228,Karsten,Sigstam,d003,Human Resources,1985-08-04,9999-01-01
+110420,Oscar,Ghazalie,d004,Production,1992-02-05,9999-01-01
+110567,Leon,DasSarma,d005,Development,1986-10-21,9999-01-01
+110854,Dung,Pesch,d006,Quality Management,1989-06-09,9999-01-01
+111133,Hauke,Zhang,d007,Sales,1986-12-30,9999-01-01
+111534,Hilary,Kambil,d008,Research,1988-01-31,9999-01-01
+111939,Yuchang,Weedman,d009,Customer Service,1989-07-10,9999-01-01
