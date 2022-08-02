@@ -1,7 +1,7 @@
 # Pewlett_Hackard_Analysis
 
 ## Project Overview
-Pwelett Hackard is a large company with thousands of employees. As the older generation begins retiring at a rapid rate, management needs to look to the future of the company and minimize the potential damage from the "silver tsunami". 
+Pwelett Hackard is a large company with thousands of employees. As the older generation begins retiring at a rapid rate, management needs to look to the future of the company and minimize the potential damage from the "silver tsunami" on the workforce. 
 
 ### Resources:
   -  Data: 6 csv's (departments, employees, dept_emp, dept_managers, titles, salaries), other csv's are tables created from my queries.
